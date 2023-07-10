@@ -44,12 +44,12 @@ body{
 }
 
 .search input::placeholder {
-    color: #b1b5bb; /* Default color */
-    transition: color 0.3s ease-in-out; /* Transition effect */
+    color: #b1b5bb; 
+    transition: color 0.3s ease-in-out; 
 }
 
 .search input:hover::placeholder {
-    color: #ffffff; /* Hover color */
+    color: #ffffff; 
 }
 .search button{
     outline: 0;
