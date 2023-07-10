@@ -36,7 +36,7 @@
         </div>
 
         <div class="error" style="display: none;">
-            <p>Invalid location. Please try again.</p>
+            <p>This is not a location on Earth. Please try again.</p>
         </div>
     </div>
 
@@ -53,9 +53,9 @@
         async function checkWeather(city) {
             const response = await fetch(apiUrl + city + `&appid=${apiKey}`);
             const data = await response.json();
+            console.log(data)
 
             if (data.cod === "404") {
-                // Show error message
                 weatherContainer.style.display = "none";
                 errorContainer.style.display = "block";
             } else {
@@ -64,18 +64,35 @@
                 document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
                 document.querySelector(".wind").innerHTML = Math.round(data.wind.speed) + "KM/H";
 
-                if (data.weather[0].main == "Clouds") {
-                    windIcon.src = "images/cloudy.png";
-                } else if (data.weather[0].main == "Clear") {
-                    windIcon.src = "images/sunny.png";
-                } else if (data.weather[0].main == "Rain") {
-                    windIcon.src = "images/rain.png";
-                } else if (data.weather[0].main == "Drizzle") {
-                    windIcon.src = "images/drizzle.png";
-                } else if (data.weather[0].main == "Mist") {
-                    windIcon.src = "images/fog.png";
-                } else if (data.weather[0].main == "Snow") {
-                    windIcon.src = "images/snow.png";
+                const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
+                if (currentTime > data.sys.sunrise && currentTime < data.sys.sunset) {
+                    // Daytime
+                    if (data.weather[0].main == "Clouds") {
+                        windIcon.src = "images/cloudy.png";
+                    } else if (data.weather[0].main == "Clear") {
+                        windIcon.src = "images/sunny.png";
+                    } else if (data.weather[0].main == "Rain") {
+                        windIcon.src = "images/rain.png";
+                    } else if (data.weather[0].main == "Drizzle") {
+                        windIcon.src = "images/drizzle.png";
+                    } else if (data.weather[0].main == "Mist") {
+                        windIcon.src = "images/fog.png";
+                    } else if (data.weather[0].main == "Snow") {
+                        windIcon.src = "images/snow.png";
+                    }
+                } else {
+                    // Nighttime
+                    if (data.weather[0].main == "Clouds" && data.weather[0].description.includes("rain")) {
+                        windIcon.src = "images/rainy-night-removebg-preview.png";
+                    } else if (data.weather[0].main == "Clouds") {
+                        windIcon.src = "images/cloud-moon-removebg-preview.png";
+                    } else if (data.weather[0].main == "Snow") {
+                        windIcon.src = "images/snow__1_-removebg-preview.png";
+                    } else if (data.weather[0].main == "Mist") {
+                        windIcon.src = "images/fog__2_-removebg-preview.png";
+                    } else {
+                        windIcon.src = "images/moon-removebg-preview.png";
+                    }
                 }
 
                 weatherContainer.style.display = "block";
